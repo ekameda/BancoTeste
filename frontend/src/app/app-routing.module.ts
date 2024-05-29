@@ -1,16 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ClienteComponent } from './cliente/cliente.component';
-import { ExtratoComponent } from './extrato/extrato.component';
-import { HomeComponent } from './home/home.component';
-import { BodyComponent } from './shared/body/body.component';
+import { AssociacaoComponent } from './associacao/associacao.component';
+import { ClienteComponent } from './cliente/cliente/cliente.component';
+import { ContaComponent } from './conta/conta/conta.component';
+import { ExtratoComponent } from './conta/extrato/extrato.component';
+
 
 const routes: Routes = [
-  { path: '', component: HomeComponent},
-  { path: 'extrato/list/:id', component: ExtratoComponent},
-  { path: 'clienteCad', component: ClienteComponent},
-  { path: 'extrato', component: BodyComponent},
-]
+  { path: '', redirectTo: '/cliente', pathMatch: 'full' },
+  { path: 'cliente',component: ClienteComponent},
+  { path: 'conta', component: ContaComponent },
+  { path: 'associacao', component: AssociacaoComponent },
+  { path: 'extrato', component: ExtratoComponent },
+  { path: 'criaConta', component: ContaComponent },
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

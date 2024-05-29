@@ -1,7 +1,10 @@
+import { Conta } from "./conta";
 
 export interface Cliente {
-  nome: String;
-  idade: Number;
-  email: String;
-  cpf: Number;
+  id?: number;
+  nome: string;
+  idade: number;
+  email: string;
+  cpf: string;
+  conta?: Conta;
 }

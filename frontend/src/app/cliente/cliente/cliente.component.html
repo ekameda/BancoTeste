@@ -1,0 +1,62 @@
+<div class="d-flex justify-content-center align-items-center">
+  <div class="card p-4" style="width: 100%; max-width: 400px; margin-top: 100px; margin-bottom: 100px; ">
+
+    <form class="needs-validation" novalidate>
+      <div class="mb-3">
+        <label for="nome" class="form-label">Nome <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" id="nome" [(ngModel)]="novoCliente.nome" name="nome" required>
+        <div class="invalid-feedback">Por favor, insira um nome.</div>
+      </div>
+      <div class="mb-3">
+        <label for="idade" class="form-label">Idade <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" id="idade" [(ngModel)]="novoCliente.idade" name="idade" required (keypress)="validateNumber($event)">
+        <div class="invalid-feedback">Por favor, insira uma idade válida.</div>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+        <input type="email" class="form-control" id="email" [(ngModel)]="novoCliente.email" name="email" required>
+        <div class="invalid-feedback">Por favor, insira um email válido.</div>
+      </div>
+      <div class="mb-3">
+        <label for="cpf" class="form-label">CPF <span class="text-danger">*</span></label>
+        <input type="text" class="form-control" id="cpf" [(ngModel)]="novoCliente.cpf" name="cpf" required (keypress)="validateNumber($event)" maxlength="11">
+        <div class="invalid-feedback">Por favor, insira um CPF válido.</div>
+      </div>
+      <button type="button" class="btn btn-primary" (click)="checkFormValidity()">Cadastrar Cliente</button>
+    </form>
+  </div>
+</div>
+
+<div *ngIf="displaySuccess" class="modal fade show d-block" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cadastro Realizado</h5>
+        <button type="button" class="btn-close" (click)="resetForm()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Cliente cadastrado com sucesso! ID: {{ novoCliente.id }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="resetForm()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="displayError" class="modal fade show d-block" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Erro no Cadastro</h5>
+        <button type="button" class="btn-close" (click)="displayError = false" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Ocorreu um erro ao cadastrar o Cliente. Por favor, tente novamente.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="displayError = false">OK</button>
+      </div>
+    </div>
+  </div>
+</div>

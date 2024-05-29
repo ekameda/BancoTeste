@@ -6,6 +6,5 @@ import { Component } from '@angular/core';
   styleUrl: './extrato.component.css'
 })
 export class ExtratoComponent {
-  transacao: String[] = ['Extrato 1', 'Extrato 2', 'Extrato 3', 'Extrato 4', 'Extrato 5'];
 
 }

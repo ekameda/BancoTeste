@@ -1,9 +1,7 @@
-import { Cliente } from './cliente';
-import { Transacao } from './transacao';
-export interface Conta{
-  id: Number;
-  cliente: Cliente[];
-  saldo: Number;
-  contas: Conta[];
-  transacao: Transacao[];
+
+export interface Conta {
+  id?: Number;
+  cliente?: Number;
+  saldo?: Number;
+  numero?: number
 }

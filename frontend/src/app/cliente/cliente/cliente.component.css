@@ -1,0 +1,15 @@
+/* Estilo para os campos do formulário */
+.form-control {
+  color: #0d6efd; /* Azul Bootstrap */
+  border-color: #0d6efd; /* Azul Bootstrap */
+}
+
+/* Estilo para o asterisco dos campos obrigatórios */
+.text-danger {
+  color: #dc3545; /* Vermelho Bootstrap */
+}
+
+/* Estilo para exibir a mensagem de feedback de validação */
+.form-control.ng-invalid.ng-touched + .invalid-feedback {
+  display: block;
+}
