@@ -9,7 +9,7 @@
       </div>
       <div class="mb-3">
         <label for="idade" class="form-label">Idade <span class="text-danger">*</span></label>
-        <input type="text" class="form-control" id="idade" [(ngModel)]="novoCliente.idade" name="idade" required (keypress)="validateNumber($event)">
+        <input type="text" class="form-control" id="idade" [(ngModel)]="novoCliente.idade" name="idade" maxlength="3" minlength="1" required (keypress)="validateNumber($event)">
         <div class="invalid-feedback">Por favor, insira uma idade válida.</div>
       </div>
       <div class="mb-3">
@@ -19,7 +19,7 @@
       </div>
       <div class="mb-3">
         <label for="cpf" class="form-label">CPF <span class="text-danger">*</span></label>
-        <input type="text" class="form-control" id="cpf" [(ngModel)]="novoCliente.cpf" name="cpf" required (keypress)="validateNumber($event)" maxlength="11">
+        <input type="text" class="form-control" id="cpf" [(ngModel)]="novoCliente.cpf" name="cpf" required (keypress)="validateNumber($event)" autocomplete="off" minlength="11" maxlength="11">
         <div class="invalid-feedback">Por favor, insira um CPF válido.</div>
       </div>
       <button type="button" class="btn btn-primary" (click)="checkFormValidity()">Cadastrar Cliente</button>

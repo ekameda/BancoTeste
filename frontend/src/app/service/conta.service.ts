@@ -10,10 +10,10 @@ import { Conta } from '../models/conta';
 export class ContaService {
 
   apiUrl: string = environment.apiUrlConta;
+
   constructor(private http: HttpClient) {}
 
   salvarConta(conta: Conta): Observable<Conta> {
-    console.log(this.apiUrl);
     return this.http.post<Conta>(this.apiUrl, conta);
   }
 }

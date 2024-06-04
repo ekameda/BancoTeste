@@ -9,5 +9,8 @@ import com.teste.banco.model.Cliente;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
+
     Optional<Cliente> findByCpf(String cpf);    
+    boolean existsByCpf(String cpf);
+        
 }

@@ -18,7 +18,6 @@ export class ClienteService {
   }
 
   createCliente(cliente: Cliente): Observable<Cliente> {
-    console.log('apiCli');
     return this.http.post<Cliente>(this.apiCli, cliente);
   }
 
@@ -26,9 +25,11 @@ export class ClienteService {
     return this.http.get<Cliente>(`${this.apiCli}/${cpf}`);
   }
 
-
   buscarPorNome(nome: string): Observable<Cliente> {
     return this.http.get<Cliente>(`${this.apiCli}?nome=${nome}`);
   }
 
+  buscarClientePorId(id : number): Observable<Cliente> {
+    return this.http.get<Cliente>(`${this.apiCli}?id=${id}`);
+  }
 }

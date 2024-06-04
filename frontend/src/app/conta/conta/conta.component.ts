@@ -1,41 +1,40 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Conta } from '../../models/conta';
+import { ClienteService } from '../../service/cliente.service';
 import { ContaService } from '../../service/conta.service';
 import { Cliente } from './../../models/cliente';
-import { ClienteService } from './../../service/cliente.service';
-
 @Component({
   selector: 'app-conta',
   templateUrl: './conta.component.html',
   styleUrls: ['./conta.component.css']
 })
 export class ContaComponent {
-  conta: Conta = {};
-  cliente: Cliente | undefined;
-  clienteNomeCompleto: string | undefined;
-  clienteId: number | undefined;
+
+  cliente: Cliente = {
+    nome: '',
+    idade: undefined,
+    email: '',
+    cpf: '',
+    id: 0
+  };
+
+  conta: Conta = {
+    id: undefined,
+    cliente: undefined,
+    saldo: 0,
+    numero: undefined
+  };
+
+  cliId: number = 0;
   displaySuccess: boolean = false;
   displayError: boolean = false;
 
-  constructor(private clienteService: ClienteService,
+  constructor(
+    private clienteService: ClienteService,
     private contaService: ContaService,
-    private router: Router) {}
-
-  buscarClientePorNome(nome: string) {
-    this.clienteService.buscarPorNome(nome).subscribe(
-      (cliente: Cliente) => {
-        this.cliente = cliente;
-        this.clienteNomeCompleto = `${cliente.nome}`;
-        this.clienteId = cliente.id;
-      },
-      () => {
-        this.cliente = undefined;
-        this.clienteNomeCompleto = undefined;
-        this.clienteId = undefined;
-      }
-    );
-  }
+    private router: Router
+  ) {}
 
   validateNumber(event: KeyboardEvent) {
     const charCode = (event.which) ? event.which : event.keyCode;
@@ -44,34 +43,38 @@ export class ContaComponent {
     }
   }
 
-  cadastrarConta() {
-    this.contaService.salvarConta(this.conta).subscribe(response => {
-      this.conta.id = response.id;
-      this.displaySuccess = true;
-      this.router.navigate(['conta']);
+  salvarConta() {
+    this.clienteService.buscarClientePorId(this.cliId).subscribe((cliente: Cliente) => {
+      this.cliente = cliente;
+      this.conta.cliente = this.cliente;
+
+      this.contaService.salvarConta(this.conta).subscribe(response => {
+        this.conta.id = response.id;
+        this.displaySuccess = true;
+        this.router.navigate(['conta']);
+      }, error => {
+        this.displayError = true;
+      });
     }, error => {
       this.displayError = true;
     });
   }
 
   checkFormValidity() {
-    const form = document.querySelector('.needs-validation') as HTMLFormElement;
-    if (form.checkValidity() === false) {
-      event?.preventDefault();
-      event?.stopPropagation();
+    if (this.cliId === 0 || this.conta.numero === undefined) {
+      return;
     }
-    form.classList.add('was-validated');
-    this.cadastrarConta();
+    this.salvarConta();
   }
 
   resetForm() {
-    this.conta = {};
-    this.cliente = undefined;
-    this.clienteNomeCompleto = undefined;
-    this.clienteId = undefined;
+    this.conta = {
+      id: undefined,
+      cliente: undefined,
+      saldo: undefined,
+      numero: undefined
+    };
     this.displaySuccess = false;
     this.displayError = false;
-    const form = document.querySelector('.needs-validation') as HTMLFormElement;
-    form.classList.remove('was-validated');
   }
 }

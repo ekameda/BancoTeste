@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Cliente } from '../../models/cliente';
 import { ClienteService } from '../../service/cliente.service';
@@ -9,17 +9,23 @@ import { ClienteService } from '../../service/cliente.service';
   styleUrls: ['./cliente.component.css']
 })
 
-export class ClienteComponent {
+export class ClienteComponent implements AfterViewInit {
+
+  ngAfterViewInit() {
+    this.cdRef.detectChanges();
+  }
+
   novoCliente: Cliente;
   displaySuccess: boolean = false;
   displayError: boolean = false;
 
   constructor(
+    private cdRef: ChangeDetectorRef,
     private clienteService: ClienteService,
     private router: Router) {
     this.novoCliente = {
       nome: '',
-      idade: 0,
+      idade: undefined,
       email: '',
       cpf: '',
       id: undefined
@@ -61,10 +67,10 @@ export class ClienteComponent {
     const form = document.querySelector('form');
     form?.classList.remove('was-validated');
     this.novoCliente = {
-      nome: ' ',
-      idade: 0,
-      email: ' ',
-      cpf: ' ',
+      nome: '',
+      idade: undefined,
+      email: '',
+      cpf: '',
       id: undefined
     }
   }

@@ -1,10 +1,15 @@
 package com.teste.banco.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.teste.banco.model.Conta;
 
 @Repository
 public interface ContaRepository extends JpaRepository<Conta, Long> {
+    
+    Conta findByContaNumero(@Param("contaNumero") Long numero);
+
+    public boolean existsByContaNumero(Long numeroConta);
 }

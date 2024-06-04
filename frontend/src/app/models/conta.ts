@@ -1,7 +1,8 @@
+import { Cliente } from './cliente';
 
 export interface Conta {
   id?: Number;
-  cliente?: Number;
-  saldo?: Number;
+  cliente?: Cliente;
+  saldo?: number;
   numero?: number
 }
