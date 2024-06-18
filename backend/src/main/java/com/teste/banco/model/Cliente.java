@@ -3,6 +3,9 @@ package com.teste.banco.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,8 +16,6 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,30 +25,43 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @NotBlank(message="Nome não pode ser em Branco")
-    @NotNull(message="Nome não pode ser Nulo")
     private String nome;
-
-    @NotNull(message = "Idade não pode ser nula")
-    @Min(value = 0, message = "Idade deve ser maior ou igual a 0")
-    @Max(value = 150, message = "Idade deve ser menor ou igual a 150")
+    
+    @Min(value = 1, message = "Idade deve ser maior ou igual a 0")
+    @Max(value = 300, message = "Idade deve ser menor ou igual a 300")
     private Integer idade;
     
-    @NotBlank(message="Email não pode ser em Branco")
-    @NotNull(message = "Email não pode ser nulo")
     private String email;
 
-    @NotBlank(message="CPF não pode ser em Branco")
-    @NotNull(message="CPF não pode ser Nulo")
     @Column(nullable = false, unique = true)
     private String cpf;
 
     @ManyToMany
-    @JoinTable(name = "cliente_conta", joinColumns = @JoinColumn(name = "cliente_id"), inverseJoinColumns = @JoinColumn(name = "conta_id"))
+    @JoinTable( name = "cliente_conta", 
+        joinColumns = @JoinColumn(name = "cliente_id"), 
+        inverseJoinColumns = @JoinColumn(name = "conta_id")    )
     private List<Conta> contas = new ArrayList<>();
+
+
+    public void addConta(Conta conta) {
+        if (this.contas.size() < 5) {          
+            this.contas.add(conta);
+        } else {
+            throw new IllegalStateException("Um cliente não pode ter mais de 5 contas");
+        }
+    }
+
+    public void removeConta(Conta conta) {
+        if (this.contas.size() > 1) {
+            this.contas.remove(conta);
+        } else {
+            throw new IllegalStateException("Um cliente deve ter pelo menos 1 conta");
+        }
+    }
 }

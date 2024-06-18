@@ -1,6 +1,5 @@
 package com.teste.banco.controller;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,61 +12,64 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.teste.banco.dto.TransacaoDTO;
 import com.teste.banco.exception.ResourceNotFoundException;
-import com.teste.banco.model.Conta;
-import com.teste.banco.model.Transacao;
-import com.teste.banco.service.ContaService;
+import com.teste.banco.exception.TransacaoNotAcceptableException;
 import com.teste.banco.service.TransacaoService;
 
-import jakarta.transaction.Transactional;
-
 @RestController
-@RequestMapping("/api/transacoes")
-@CrossOrigin(origins = "*")
+@RequestMapping("/api/transacao")
+@CrossOrigin(origins = "http://localhost:4200")
 public class TransacaoController {
 
-    @Autowired
-    private TransacaoService transacaoService;
+    private final TransacaoService transacaoService;
 
     @Autowired
-    private ContaService contaService;
+    public TransacaoController(TransacaoService transacaoService) {
+        this.transacaoService = transacaoService;
+    }
 
     @GetMapping
-    public List<Transacao> getAllTransacoes() {
-        return transacaoService.getAllTransacoes();
+    public ResponseEntity<List<TransacaoDTO>> getAllTransacao() {
+        try {
+            List<TransacaoDTO> transactionDTOs = transacaoService.getAllTransacao();
+            return ResponseEntity.ok(transactionDTOs);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Transacao> buscarTransacaoPorId(@PathVariable Long id) {
-        Transacao transacao = transacaoService.buscarPorId(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Transacao not found"));
-        return ResponseEntity.ok(transacao);
+    public ResponseEntity<TransacaoDTO> getTransactionById(@PathVariable Long id) {
+        try {
+            TransacaoDTO transactionDTO = transacaoService.getTransacaoById(id);
+            return ResponseEntity.ok(transactionDTO);
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(404).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
 
     @PostMapping
-    @Transactional
-    public Transacao createTransacao(@RequestBody Transacao transacao) {
-        transacao.setDataHora(LocalDateTime.now());
-        Conta conta = contaService.findById(transacao.getConta().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Conta not found"));
-        if ("CREDITO".equalsIgnoreCase(transacao.getTipo())) {
-            conta.setSaldo(conta.getSaldo() + transacao.getValor());
-        } else if ("DEBITO".equalsIgnoreCase(transacao.getTipo())) {
-            if (conta.getSaldo() < transacao.getValor()) {
-                throw new RuntimeException("Saldo insuficiente.");
-            }
-            conta.setSaldo(conta.getSaldo() - transacao.getValor());
-        } else {
-            throw new RuntimeException("Tipo de transação inválido.");
+    public ResponseEntity<TransacaoDTO> createTransaction(@RequestBody TransacaoDTO transactionDTO) {
+        try {
+            TransacaoDTO savedTransacao = transacaoService.save(transactionDTO);
+            return ResponseEntity.status(201).body(savedTransacao);
+        } catch (TransacaoNotAcceptableException e) {
+            return ResponseEntity.status(400).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
         }
-        conta.adicionarTransacao(transacao);
-        contaService.save(conta);
-        return transacaoService.save(transacao);
     }
 
     @GetMapping("/conta/{contaId}")
-    public List<Transacao> getTransacoesByConta(@PathVariable Long contaId) {
-        return transacaoService.findByContaId(contaId);
+    public ResponseEntity<List<TransacaoDTO>> getTransacaoByContaId(@PathVariable Long contaId) {
+        try {
+            List<TransacaoDTO> transacao = transacaoService.getTransacaoByContaId(contaId);
+            return ResponseEntity.ok(transacao);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
+        }
     }
-
 }

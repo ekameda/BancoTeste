@@ -30,6 +30,6 @@ export class ClienteService {
   }
 
   buscarClientePorId(id : number): Observable<Cliente> {
-    return this.http.get<Cliente>(`${this.apiCli}?id=${id}`);
+    return this.http.get<Cliente>(`${this.apiCli}/${id}`);
   }
 }

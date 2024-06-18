@@ -22,20 +22,22 @@ export class ClienteComponent implements AfterViewInit {
   constructor(
     private cdRef: ChangeDetectorRef,
     private clienteService: ClienteService,
+    private cdr: ChangeDetectorRef ,
     private router: Router) {
     this.novoCliente = {
       nome: '',
       idade: undefined,
       email: '',
       cpf: '',
-      id: undefined
+      id: 0
     }
   }
 
   cadastrarCliente() {
     this.clienteService.createCliente(this.novoCliente).subscribe(response => {
-      this.novoCliente.id = response.id;
+      this.novoCliente = response;
       this.displaySuccess = true;
+      this.cdr.detectChanges();
       this.router.navigate(['cliente']);
     }, error => {
       this.displayError = true;
@@ -71,7 +73,7 @@ export class ClienteComponent implements AfterViewInit {
       idade: undefined,
       email: '',
       cpf: '',
-      id: undefined
+      id: 0
     }
   }
 

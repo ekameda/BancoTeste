@@ -1,21 +1,32 @@
-<div *ngIf="errorMessage" class="error-message">
-  {{ errorMessage }}
-</div>
-
 <div class="d-flex justify-content-center align-items-center">
   <div class="card p-4" style="width: 100%; max-width: 400px; margin-top: 100px; margin-bottom: 100px; ">
     <form class="needs-validation" novalidate>
       <div class="mb-3">
-          <label for="cliente" class="form-label">ID do Cliente <span class="text-danger">*</span></label>
-          <input type="number" class="form-control" id="cliente" [(ngModel)]="cliId" name="cliente" required>
-          <div class="invalid-feedback">Por favor, insira o ID do cliente.</div>
+        <label class="form-label">Incluir Transação</label>
       </div>
+
       <div class="mb-3">
-        <label for="numero" class="form-label">Numero Conta <span class="text-danger">*</span></label>
-        <input type="text" class="form-control" id="numero" [(ngModel)]="conta.contaNumero" name="numero"
-        required (keypress)="validateNumber($event)">
-        <div class="invalid-feedback">Por favor, insira uma Numero válido.</div>
+        <label for="tipo" class="form-label">Tipo de Transação <span class="text-danger">*</span></label>
+        <select class="form-control" id="tipo" [(ngModel)]="transacao.tipo" name="tipo" required>
+          <option value="DEBITO">Debito</option>
+          <option value="CREDITO">Credito</option>
+        </select>
       </div>
+
+      <div class="mb-3">
+          <label for="Conta" class="form-label">Numero Conta do Cliente <span class="text-danger">*</span></label>
+          <input type="string" class="form-control" id="conta" [(ngModel)]="conta.contaNumero" name="conta"
+            required (keypress)="validateNumber($event)">
+          <div class="invalid-feedback">Por favor, insira o Numero da Conta do cliente.</div>
+      </div>
+
+      <div class="mb-3">
+        <label for="valor" class="form-label">Valor Monetário <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" id="valor" [(ngModel)]="transacao.valor" name="valor"
+        required (keypress)="validateNumber($event)">
+        <div class="invalid-feedback">Por favor, insira uma Valor válido.</div>
+      </div>
+
       <button type="button" class="btn btn-primary" (click)="checkFormValidity()">Cadastrar Conta</button>
     </form>
   </div>
@@ -29,7 +40,7 @@
         <button type="button" class="btn-close" (click)="resetForm()" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Conta cadastrado com sucesso! ID: {{ conta.id}}</p>
+        <p>{{ successMessage }}</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" (click)="resetForm()">OK</button>
@@ -46,7 +57,7 @@
         <button type="button" class="btn-close" (click)="displayError = false" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Ocorreu um erro ao cadastrar a Conta. Por favor, tente novamente.</p>
+        <p>{{ errorMessage }}</p>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" (click)="displayError = false">OK</button>

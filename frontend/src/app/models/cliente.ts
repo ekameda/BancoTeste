@@ -1,7 +1,7 @@
 import { Conta } from "./conta";
 
 export interface Cliente {
-  id?: number;
+  id: number;
   nome: string;
   idade?: number;
   email: string;

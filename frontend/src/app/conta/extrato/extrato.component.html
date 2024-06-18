@@ -1,1 +1,78 @@
-<p>extrato workasdfsdfasfs!</p>
+<div class="d-flex justify-content-center align-items-center">
+  <div class="card p-4" style="width: 100%; max-width: 600px; margin-top: 100px; margin-bottom: 100px;">
+    <form class="needs-validation" novalidate>
+      <div class="mb-3">
+        <label class="form-label center_focus_strong">Extrato das Transações</label>
+      </div>
+
+      <div class="mb-3">
+        <label for="Conta" class="form-label">Número da Conta do Cliente <span class="text-danger">*</span></label>
+        <input type="number" class="form-control" id="conta" [(ngModel)]="conta.contaNumero" name="conta" required (keypress)="validateNumber($event)">
+        <div class="invalid-feedback">Por favor, insira o Número da Conta do cliente.</div>
+      </div>
+
+      <div class="mb-3" *ngIf="contemCliente">
+        <p><strong>Nome do Cliente:</strong> {{ cliente.nome }}</p>
+        <p><strong>CPF do Cliente:</strong> {{ cliente.cpf }}</p>
+        <p><strong>Número da Conta:</strong> {{ conta.contaNumero }}</p>
+      </div>
+
+      <button type="button" class="btn btn-primary" (click)="buscarExtrato()">Buscar Extrato</button>
+
+      <div *ngIf="extrato.length > 0" class="table-responsive mt-3">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Data</th>
+              <th>Tipo</th>
+              <th>Valor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of extrato">
+              <td>{{ item.id }}</td>
+              <td>{{ item.dataHora }}</td>
+              <td>{{ item.tipo }}</td>
+              <td>{{ item.valor }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div *ngIf="displaySuccess" class="modal fade show d-block" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cadastro Realizado</h5>
+        <button type="button" class="btn-close" (click)="resetForm()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>{{ successMessage }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="resetForm()">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="displayError" class="modal fade show d-block" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Erro no Cadastro</h5>
+        <button type="button" class="btn-close" (click)="displayError = false" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>{{ errorMessage }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="displayError = false">OK</button>
+      </div>
+    </div>
+  </div>
+</div>

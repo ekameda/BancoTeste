@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AssociacaoComponent } from './associacao/associacao.component';
 import { ClienteComponent } from './cliente/cliente/cliente.component';
 import { ContaComponent } from './conta/conta/conta.component';
 import { ExtratoComponent } from './conta/extrato/extrato.component';
+import { TransacaoComponent } from './conta/transacao/transacao.component';
 
 
 const routes: Routes = [
-  { path: '', redirectTo: '/cliente', pathMatch: 'full' },
+  { path: '', redirectTo: 'cliente', pathMatch: 'full' },
   { path: 'cliente',component: ClienteComponent},
   { path: 'conta', component: ContaComponent },
-  { path: 'associacao', component: AssociacaoComponent },
+  { path: 'transacao', component: TransacaoComponent },
   { path: 'extrato', component: ExtratoComponent },
   { path: 'criaConta', component: ContaComponent },
 ];

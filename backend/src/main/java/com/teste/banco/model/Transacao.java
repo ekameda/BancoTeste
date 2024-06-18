@@ -1,6 +1,9 @@
 package com.teste.banco.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,11 +23,15 @@ public class Transacao {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Double valor;
+
+    private BigDecimal valor = BigDecimal.ZERO;
+
     private LocalDateTime dataHora;
+
     private String tipo;
 
     @ManyToOne
     @JoinColumn(name = "conta_id")
+    @JsonBackReference
     private Conta conta;
 }

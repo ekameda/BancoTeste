@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Conta } from '../../models/conta';
 import { ClienteService } from '../../service/cliente.service';
@@ -21,11 +21,12 @@ export class ContaComponent {
 
   conta: Conta = {
     id: undefined,
-    cliente: undefined,
+    clientes: undefined,
     saldo: 0,
-    numero: undefined
+    contaNumero: 0
   };
 
+  errorMessage: string = '';
   cliId: number = 0;
   displaySuccess: boolean = false;
   displayError: boolean = false;
@@ -33,8 +34,9 @@ export class ContaComponent {
   constructor(
     private clienteService: ClienteService,
     private contaService: ContaService,
+    private cdr: ChangeDetectorRef,
     private router: Router
-  ) {}
+  ) { }
 
   validateNumber(event: KeyboardEvent) {
     const charCode = (event.which) ? event.which : event.keyCode;
@@ -43,36 +45,48 @@ export class ContaComponent {
     }
   }
 
-  salvarConta() {
-    this.clienteService.buscarClientePorId(this.cliId).subscribe((cliente: Cliente) => {
-      this.cliente = cliente;
-      this.conta.cliente = this.cliente;
-
-      this.contaService.salvarConta(this.conta).subscribe(response => {
-        this.conta.id = response.id;
-        this.displaySuccess = true;
-        this.router.navigate(['conta']);
-      }, error => {
-        this.displayError = true;
-      });
-    }, error => {
-      this.displayError = true;
-    });
-  }
-
   checkFormValidity() {
-    if (this.cliId === 0 || this.conta.numero === undefined) {
+    if (this.cliId === 0 || this.conta.contaNumero === undefined) {
       return;
     }
     this.salvarConta();
   }
 
+  salvarConta() {
+    this.clienteService.buscarClientePorId(this.cliId).subscribe((cliente: Cliente) => {
+      console.log('Cliente Localizado com sucesso:', cliente);
+      this.errorMessage = '';
+      this.cliente = cliente;
+      this.cdr.detectChanges();
+
+      this.contaService.salvarConta1(cliente.id , this.conta).subscribe(response => {
+        console.log('Conta criada com sucesso:', response);
+        this.errorMessage = '';
+        this.conta.id = response.id;
+        this.displaySuccess = true;
+        this.cdr.detectChanges();
+        this.router.navigate(['conta']);
+        this.resetForm();
+
+      },
+      error => {
+        console.error('Ocorreu um erro:', error);
+        this.errorMessage = error;
+        this.displayError = true;
+      });
+    }, error => {
+      console.error('Ocorreu um erro:', error);
+        this.errorMessage = error;
+      this.displayError = true;
+    });
+  }
+
   resetForm() {
     this.conta = {
       id: undefined,
-      cliente: undefined,
+      clientes: undefined,
       saldo: undefined,
-      numero: undefined
+      contaNumero: 0
     };
     this.displaySuccess = false;
     this.displayError = false;

@@ -16,6 +16,7 @@ import { ExtratoComponent } from './conta/extrato/extrato.component';
 import { BodyComponent } from './shared/body/body.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { HeaderComponent } from './shared/header/header.component';
+import { TransacaoComponent } from './conta/transacao/transacao.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { HeaderComponent } from './shared/header/header.component';
     FooterComponent,
     HeaderComponent,
     ClienteComponent,
-    AssociacaoComponent
+    AssociacaoComponent,
+    TransacaoComponent
   ],
   imports: [
     BrowserModule,
