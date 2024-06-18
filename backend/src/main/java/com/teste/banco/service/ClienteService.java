@@ -5,9 +5,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.teste.banco.dto.ClienteDTO;
-import com.teste.banco.dto.ContaDTO;
 import com.teste.banco.exception.ClienteNotFoundException;
-import com.teste.banco.exception.ContaNotFoundException;
 import com.teste.banco.exception.CpfAlreadyExistsException;
 import com.teste.banco.mapper.ClienteMapper;
 import com.teste.banco.model.Cliente;
@@ -17,12 +15,9 @@ import com.teste.banco.repository.ClienteRepository;
 public class ClienteService {
 
     private final ClienteRepository clienteRepository;
-    private final ContaService contaService;
-
     @Autowired
-    public ClienteService(ClienteRepository clienteRepository, ContaService contaService) {
+    public ClienteService(ClienteRepository clienteRepository) {
         this.clienteRepository = clienteRepository;
-        this.contaService = contaService;
     }
 
     public ClienteDTO salvarCliente(Cliente cliente) {
@@ -48,15 +43,4 @@ public class ClienteService {
                 .orElseThrow(() -> new ClienteNotFoundException("Cliente não encontrado com id: " + id));
     }
 
-    public ClienteDTO buscarClientePorConta(Long contaId) {
-        ContaDTO contaDTO = contaService.findById(contaId);
-        if (contaDTO == null) {
-            throw new ContaNotFoundException("Conta não localizada com ID: " + contaId);
-        }
-
-        Long clienteId = contaDTO.getClientesIds().get(0);
-        Cliente cliente = clienteRepository.findById(clienteId)
-                .orElseThrow(() -> new ClienteNotFoundException("Cliente não localizado com ID: " + clienteId));
-        return ClienteMapper.toDTO(cliente);
-    }
 }

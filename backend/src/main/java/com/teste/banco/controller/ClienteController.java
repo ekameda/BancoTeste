@@ -47,10 +47,4 @@ public class ClienteController {
         ClienteDTO clienteDTO = clienteService.buscarPorCpf(cpf);
         return clienteDTO != null ? ResponseEntity.ok(clienteDTO) : ResponseEntity.notFound().build();
     }
-
-    @GetMapping("/cliente/{contaId}")
-    public ResponseEntity<ClienteDTO> buscarClientePorConta(@PathVariable Long contaId) {
-        ClienteDTO clienteDTO = clienteService.buscarClientePorConta(contaId);
-        return ResponseEntity.ok(clienteDTO);
-    }
 }

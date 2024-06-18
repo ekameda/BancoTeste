@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.teste.banco.dto.ClienteDTO;
 import com.teste.banco.dto.ContaDTO;
 import com.teste.banco.exception.ContaNotFoundException;
 import com.teste.banco.exception.ResourceNotFoundException;
@@ -52,6 +53,12 @@ public class ContaController {
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
+    }
+
+    @GetMapping("/cliente/{contaId}")
+    public ResponseEntity<ClienteDTO> buscarClientePorIdConta(@RequestParam Long contaId) {
+        ClienteDTO clienteDTO = contaService.getClientIdConta(contaId);
+        return ResponseEntity.ok(clienteDTO);
     }
 
     @GetMapping("/{id}")

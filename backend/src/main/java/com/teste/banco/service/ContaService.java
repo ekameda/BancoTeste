@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.teste.banco.dto.ClienteDTO;
 import com.teste.banco.dto.ContaDTO;
 import com.teste.banco.exception.ContaNotFoundException;
+import com.teste.banco.mapper.ClienteMapper;
 import com.teste.banco.mapper.ContaMapper;
 import com.teste.banco.model.Cliente;
 import com.teste.banco.model.Conta;
@@ -57,6 +59,10 @@ public class ContaService {
         Conta conta = criarNovaConta(numeroConta, cliente);
         contaRepository.save(conta);
         return ContaMapper.toDTO(conta);
+    }    
+
+    private Cliente obterCliente(Long idCliente) {
+        return clienteService.findById(idCliente);
     }
 
     private void validarParametros(Long idCliente, Long numeroConta) {
@@ -68,15 +74,20 @@ public class ContaService {
         }
     }
 
-    private Cliente obterCliente(Long idCliente) {
-        return clienteService.findById(idCliente);
-    }
-
     private Conta criarNovaConta(Long numeroConta, Cliente cliente) {
         Conta conta = new Conta();
         conta.setContaNumero(numeroConta);
         conta.addCliente(cliente);
         cliente.addConta(conta);
         return conta;
+    }
+
+    public ClienteDTO getClientIdConta(Long contaId){
+        Conta conta = contaRepository.findById(contaId)
+                .orElseThrow(() -> new ContaNotFoundException("Conta não encontrada com ID: " + contaId));
+        if (conta.getClientes().isEmpty()){
+            throw new IllegalArgumentException("Não existe cliente associado a Conta de ID: "+ contaId);
+        }       
+        return ClienteMapper.toDTO(conta.getClientes().get(0));
     }
 }
